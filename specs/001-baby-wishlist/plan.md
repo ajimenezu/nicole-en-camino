@@ -51,7 +51,7 @@ reservas
 
 wishlist_config
   id (fila única), share_token (UUID/slug público)
-  nombre_app (default 'Julia en Camino')
+  nombre_app (default 'Nicole en Camino')
 ```
 
 **Unicidad de reserva activa**: índice único parcial en Postgres —
@@ -61,7 +61,7 @@ el mismo item en simultáneo (condición de carrera). El endpoint de
 reservar captura la violación de unicidad y responde 409.
 
 **Seed de `wishlist_config`**: la migración que crea la tabla inserta
-también la fila única con `nombre_app = 'Julia en Camino'` y un
+también la fila única con `nombre_app = 'Nicole en Camino'` y un
 `share_token` generado, para que `GET /config` funcione desde el primer
 arranque sin pasos manuales.
 

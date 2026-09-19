@@ -171,7 +171,7 @@ async function borrar() {
       </UBadge>
     </div>
 
-    <!-- Fotos de Julia usando el regalo, para mandarle a quien lo dio -->
+    <!-- Fotos de Nicole usando el regalo, para mandarle a quien lo dio -->
     <div class="mt-3 flex flex-wrap items-center gap-2">
       <a
         v-for="foto in props.regalo.fotos"
@@ -199,7 +199,7 @@ async function borrar() {
       </a>
       <SelectorFoto
         :cargando="subiendo"
-        etiqueta="Foto de Julia"
+        etiqueta="Foto de Nicole"
         size="xs"
         @seleccion="onFoto"
       />

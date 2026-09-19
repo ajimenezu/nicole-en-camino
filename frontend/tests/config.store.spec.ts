@@ -18,15 +18,15 @@ describe('store config', () => {
     fetchMock.mockReset()
   })
 
-  it('usa "Julia en Camino" como default', () => {
-    expect(useConfigStore().nombreApp).toBe('Julia en Camino')
+  it('usa "Nicole en Camino" como default', () => {
+    expect(useConfigStore().nombreApp).toBe('Nicole en Camino')
   })
 
   it('fetch trae el nombre configurado', async () => {
-    fetchMock.mockResolvedValue({ nombre_app: 'Esperando a Julia' })
+    fetchMock.mockResolvedValue({ nombre_app: 'Esperando a Nicole' })
     const store = useConfigStore()
     await store.fetch()
-    expect(store.nombreApp).toBe('Esperando a Julia')
+    expect(store.nombreApp).toBe('Esperando a Nicole')
     expect(store.cargado).toBe(true)
   })
 
@@ -42,14 +42,14 @@ describe('store config', () => {
     fetchMock.mockRejectedValue(new Error('sin backend'))
     const store = useConfigStore()
     await store.fetch()
-    expect(store.nombreApp).toBe('Julia en Camino')
+    expect(store.nombreApp).toBe('Nicole en Camino')
     expect(store.cargado).toBe(false)
   })
 
   it('setNombre actualiza el nombre en memoria', () => {
     const store = useConfigStore()
-    store.setNombre('Julia ya llegó')
-    expect(store.nombreApp).toBe('Julia ya llegó')
+    store.setNombre('Nicole ya llegó')
+    expect(store.nombreApp).toBe('Nicole ya llegó')
   })
 })
 

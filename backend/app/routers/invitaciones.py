@@ -199,7 +199,7 @@ def ver_invitacion(request: Request, token: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Link no válido")
     config = db.query(WishlistConfig).first()
     return InvitacionPublicaOut(
-        nombre_app=config.nombre_app if config else "Julia en Camino",
+        nombre_app=config.nombre_app if config else "Nicole en Camino",
         lugar=inv.lugar,
         fecha=inv.fecha,
         hora=inv.hora,

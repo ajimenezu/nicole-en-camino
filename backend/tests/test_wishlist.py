@@ -18,7 +18,7 @@ def test_wishlist_publica_solo_necesitados(client, config, item, db):
 
 
 def test_wishlist_publica_incluye_nombre_app(client, config, item):
-    assert client.get(f"/w/{TOKEN}").json()["nombre_app"] == "Julia en Camino"
+    assert client.get(f"/w/{TOKEN}").json()["nombre_app"] == "Nicole en Camino"
 
 
 def test_wishlist_publica_no_expone_campos_privados(client, config, item):
@@ -38,15 +38,15 @@ def test_config_default(client, config):
     # Solo el nombre: los datos del evento se sirven contra el token de
     # la invitación, para que el lugar y la hora no queden consultables
     # sin tener el link.
-    assert r.json() == {"nombre_app": "Julia en Camino"}
+    assert r.json() == {"nombre_app": "Nicole en Camino"}
 
 
 def test_config_update_admin(client, auth_headers, config):
     r = client.patch(
-        "/config", json={"nombre_app": "Esperando a Julia"}, headers=auth_headers
+        "/config", json={"nombre_app": "Esperando a Nicole"}, headers=auth_headers
     )
     assert r.status_code == 200
-    assert client.get("/config").json()["nombre_app"] == "Esperando a Julia"
+    assert client.get("/config").json()["nombre_app"] == "Esperando a Nicole"
 
 
 def test_config_update_requiere_auth(client, config):

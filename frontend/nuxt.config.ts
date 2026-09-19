@@ -5,9 +5,9 @@ const enTests = !!process.env.VITEST
 // El preview de los links necesita URLs absolutas: las relativas no las
 // resuelve el robot de WhatsApp.
 const SEO = {
-  sitio: process.env.NUXT_PUBLIC_SITE_URL || 'https://julia-en-camino.vercel.app',
-  titulo: 'Julia en Camino',
-  descripcion: 'Estamos esperando a Julia. Acá está lo que nos hace falta.',
+  sitio: process.env.NUXT_PUBLIC_SITE_URL || 'https://nicole-en-camino.vercel.app',
+  titulo: 'Nicole en Camino',
+  descripcion: 'Estamos esperando a Nicole. Acá está lo que nos hace falta.',
 }
 
 export default defineNuxtConfig({
@@ -34,9 +34,9 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-      name: 'Julia en Camino',
-      short_name: 'Julia',
-      description: 'Catálogo y wishlist para la llegada de Julia',
+      name: 'Nicole en Camino',
+      short_name: 'Nicole',
+      description: 'Catálogo y wishlist para la llegada de Nicole',
       theme_color: '#8c4c4d',
       background_color: '#fdf9f0',
       display: 'standalone',
@@ -74,7 +74,7 @@ export default defineNuxtConfig({
         { property: 'og:image', content: `${SEO.sitio}/og-julia.jpg` },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
-        { property: 'og:image:alt', content: 'El monograma de Julia entre flores' },
+        { property: 'og:image:alt', content: 'El monograma de Nicole entre flores' },
         { property: 'og:locale', content: 'es_ES' },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: SEO.titulo },

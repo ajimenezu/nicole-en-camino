@@ -54,7 +54,9 @@ def test_el_muro_no_expone_la_nota_privada(client, auth_headers, config, item):
     assert "secreto entre nosotros" not in publico.text
 
 
-def test_el_muro_usa_la_foto_de_julia_si_existe(client, auth_headers, config, item, db):
+def test_el_muro_usa_la_foto_de_nicole_si_existe(
+    client, auth_headers, config, item, db
+):
     from app.models.item import FotoItem
     from app.models.regalo import FotoRegalo
 
@@ -66,13 +68,13 @@ def test_el_muro_usa_la_foto_de_julia_si_existe(client, auth_headers, config, it
         headers=auth_headers,
     ).json()
 
-    # Sin foto de Julia todavía, cae a la de referencia del catálogo.
+    # Sin foto de Nicole todavía, cae a la de referencia del catálogo.
     assert client.get(f"/w/{TOKEN}").json()["recibidos"][0]["foto"].endswith("ref.jpg")
 
-    db.add(FotoRegalo(regalo_id=r["id"], url="https://cdn.test/regalos/julia.jpg"))
+    db.add(FotoRegalo(regalo_id=r["id"], url="https://cdn.test/regalos/nicole.jpg"))
     db.commit()
     assert (
-        client.get(f"/w/{TOKEN}").json()["recibidos"][0]["foto"].endswith("julia.jpg")
+        client.get(f"/w/{TOKEN}").json()["recibidos"][0]["foto"].endswith("nicole.jpg")
     )
 
 

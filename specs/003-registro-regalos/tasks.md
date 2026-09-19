@@ -50,7 +50,7 @@ dentro de su bloque. Conventional Commits, un commit por tarea.
       de objeto al vuelo
 - [x] R024 Sección "Regalos": lista con filtros
 - [x] R025 Vista agrupada por persona con marcar agradecido
-- [x] R026 Fotos de Julia por regalo (subida y descarga)
+- [x] R026 Fotos de Nicole por regalo (subida y descarga)
 - [x] R027 Filtro por etapa en el catálogo
 - [x] R028 Búsqueda con caja, etapa y personas
 

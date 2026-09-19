@@ -11,8 +11,8 @@ import type { NuxtError } from '#app'
 
 const props = defineProps<{ error: NuxtError }>()
 
-const LOGO = '/logo-julia.png'
-const LOGO_DARK = '/logo-julia-dark.png'
+const LOGO = '/logo-nicole.png'
+const LOGO_DARK = '/logo-nicole-dark.png'
 const logoOk = ref(true)
 
 const esNoEncontrado = computed(() => props.error?.statusCode === 404)
@@ -44,7 +44,7 @@ useHead({ title: esNoEncontrado.value ? 'Link no encontrado' : 'Algo salió mal'
     <p class="mt-3 max-w-sm text-neutral-600 dark:text-neutral-400">
       <template v-if="esNoEncontrado">
         Puede que el link esté incompleto: al pasarlo por chat a veces se
-        corta. Pedíselo de nuevo a los papás de Julia.
+        corta. Pedíselo de nuevo a los papás de Nicole.
       </template>
       <template v-else>
         Fue un problema nuestro, no tuyo. Probá de nuevo en un momento.

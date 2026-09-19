@@ -32,7 +32,7 @@ Depende de Fase 0 (T001, T003).
       migración con índice único parcial `(item_id) WHERE released_at
       IS NULL`
 - [x] T010 [P] Modelo `WishlistConfig` (fila única, `share_token`,
-      `nombre_app`) + migración que inserta la fila seed ("Julia en
+      `nombre_app`) + migración que inserta la fila seed ("Nicole en
       Camino" + `share_token` generado)
 
 ## Fase 2 — Auth admin
@@ -92,7 +92,7 @@ Depende de T009, T010, Fase 3.
 - [x] T029 `GET /wishlist/link` (admin: obtiene o genera `share_token`)
 - [x] T029a `PATCH /config` (admin: actualizar `nombre_app`)
 - [x] T029b [P] `GET /config` (público: `nombre_app` actual, default
-      "Julia en Camino")
+      "Nicole en Camino")
 - [x] T030 `GET /w/{share_token}` (público, solo items `necesitado`;
       incluye `nombre_app` en la respuesta)
 - [x] T031 `POST /w/{share_token}/items/{item_id}/reservar` (crea
@@ -121,7 +121,7 @@ Depende de Fases 2–6.
       mientras no esté revelado, doble reserva bloqueada (concurrencia
       contra el índice parcial)
 - [x] T038 [P] Tests wishlist pública: solo se listan items `necesitado`
-- [x] T038a [P] Tests `/config`: default "Julia en Camino", update solo
+- [x] T038a [P] Tests `/config`: default "Nicole en Camino", update solo
       admin
 
 ## Fase 8 — Frontend base

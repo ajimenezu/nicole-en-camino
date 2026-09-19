@@ -195,7 +195,7 @@ def ver_wishlist(request: Request, share_token: str, db: Session = Depends(get_d
                 id=r.id,
                 item=r.item.nombre,
                 persona=r.persona,
-                # La foto de Julia usándolo es la que cuenta la historia;
+                # La foto de Nicole usándolo es la que cuenta la historia;
                 # si no hay, se cae a la de referencia del catálogo.
                 foto=(
                     r.fotos[0].url

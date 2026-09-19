@@ -137,7 +137,7 @@ function volverAResponder() {
     <div v-if="laminaOk" class="relative mx-auto w-full max-w-md">
       <img
         :src="lamina"
-        alt="Invitación al baby shower de Julia"
+        alt="Invitación al baby shower de Nicole"
         class="w-full rounded-xl shadow-sm"
         @error="laminaOk = false"
       >
@@ -215,11 +215,11 @@ function volverAResponder() {
           <UFormGroup v-if="evento.pide_cantidad" label="¿Cuántos vienen?">
             <UInput v-model="cantidad" placeholder="2 adultos y 1 bebé" />
           </UFormGroup>
-          <UFormGroup label="Comentarios para Julia">
+          <UFormGroup label="Comentarios para Nicole">
             <UTextarea
               v-model="comentario"
               :rows="3"
-              placeholder="Un mensaje que te gustaría compartir con Julia y sus papás"
+              placeholder="Un mensaje que te gustaría compartir con Nicole y sus papás"
             />
           </UFormGroup>
           <UButton

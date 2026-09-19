@@ -22,7 +22,7 @@ Tres huecos concretos que eso deja hoy:
    marcar adquirido, escribir nombre), y la mayoría de los regalos nunca
    pasan por la wishlist.
 3. **No hay forma de agradecer con evidencia.** Queremos mandarle a cada
-   persona una foto de Julia usando lo que regaló.
+   persona una foto de Nicole usando lo que regaló.
 
 ## Historias de usuario
 
@@ -60,8 +60,8 @@ Tres huecos concretos que eso deja hoy:
    me falta escribirle.
    - AC: se puede filtrar por "pendientes de agradecer".
 
-6. **Guardar la foto de Julia usando el regalo**
-   Como admin, quiero subir una foto de Julia usando lo que nos
+6. **Guardar la foto de Nicole usando el regalo**
+   Como admin, quiero subir una foto de Nicole usando lo que nos
    regalaron, para mandársela después a esa persona.
    - AC: la foto se asocia **al regalo**, no al objeto: si dos personas
      regalaron lo mismo, cada una tiene la suya.

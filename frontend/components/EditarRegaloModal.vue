@@ -4,7 +4,7 @@
  * Existe porque anotar un regalo es justo el momento en el que se
  * confunde un nombre: pasa en medio del festejo, con la caja en la mano.
  * Hasta ahora la única salida era borrar y volver a cargar, lo que se
- * llevaba puestas también las fotos de Julia usando ese regalo.
+ * llevaba puestas también las fotos de Nicole usando ese regalo.
  *
  * El objeto no se cambia acá: mover un regalo de un item a otro
  * recalcula las cantidades de los dos y es una operación distinta. Para

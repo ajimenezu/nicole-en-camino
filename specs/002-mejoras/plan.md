@@ -116,7 +116,7 @@ Suficiente para español y portable.
 - **Wishlist pública**: badges de prioridad y rango de precio, contador
   "quedan N de M", agrupación por categoría con los urgentes primero, y
   campo de mensaje opcional en el modal de reserva.
-- **PWA**: `@vite-pwa/nuxt` con el ícono de Julia y el nombre configurado,
+- **PWA**: `@vite-pwa/nuxt` con el ícono de Nicole y el nombre configurado,
   mismo patrón que FinTrack.
 
 ## Migraciones

@@ -228,7 +228,7 @@ def eliminar_regalo(
     db.commit()
 
 
-# --- Fotos de Julia usando el regalo ---
+# --- Fotos de Nicole usando el regalo ---
 
 
 def _check_r2():

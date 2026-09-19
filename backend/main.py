@@ -19,7 +19,7 @@ from app.routers import (
 )
 
 app = FastAPI(
-    title="Julia en Camino API",
+    title="Nicole en Camino API",
     version="0.1.0",
     docs_url="/docs" if settings.DEBUG else None,
     redoc_url="/redoc" if settings.DEBUG else None,
@@ -75,7 +75,7 @@ app.add_middleware(
 async def generic_exception_handler(request: Request, exc: Exception):
     import logging
 
-    logging.getLogger("julia").error(f"Unhandled error: {exc}", exc_info=True)
+    logging.getLogger("nicole").error(f"Unhandled error: {exc}", exc_info=True)
     origin = request.headers.get("origin", "")
     headers: dict[str, str] = {}
     if origin in settings.cors_origins_list:

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-const NOMBRE_DEFAULT = 'Julia en Camino'
+const NOMBRE_DEFAULT = 'Nicole en Camino'
 
 /** Campos del evento. Se editan desde Ajustes y se leen desde el
  *  endpoint de la invitación, contra su token — no desde /config, que es

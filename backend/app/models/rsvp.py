@@ -37,7 +37,7 @@ class Rsvp(Base):
     # Cuántos vienen, como texto y no como número: «2 adultos y 1 bebé»
     # dice más que un 3, y quien invita a una familia quiere saber eso.
     cantidad: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    # Mensaje para Julia. Es lo que se guarda para leerle después, así
+    # Mensaje para Nicole. Es lo que se guarda para leerle después, así
     # que va sin tope corto y como texto libre.
     comentario: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(

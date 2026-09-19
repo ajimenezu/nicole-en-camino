@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
 
-NOMBRE_APP_DEFAULT = "Julia en Camino"
+NOMBRE_APP_DEFAULT = "Nicole en Camino"
 
 
 def _nuevo_share_token() -> str:

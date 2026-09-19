@@ -5,7 +5,7 @@ Deriva de [plan.md](./plan.md). Conventional Commits, un commit por tarea.
 ## Fase 1 — Backend
 
 - [x] P001 `RegaloPublicoOut` y `recibidos` en `GET /w/{share_token}`
-      (solo `origen = REGALO` con persona, foto de Julia o de referencia,
+      (solo `origen = REGALO` con persona, foto de Nicole o de referencia,
       más recientes primero)
 - [x] P002 Tests: el muro lista los recibidos, excluye compras propias, y
       una reserva pendiente no aparece ni filtra el nombre

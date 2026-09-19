@@ -1,6 +1,6 @@
 <svg width="200" height="200" viewBox="0 0 200 200" role="img" xmlns="http://www.w3.org/2000/svg">
-<title>Julia en Camino</title>
-<desc>Insignia circular color crema con una J trazada a mano en rosa vino y una pequeña flor de cinco pétalos; variante oscura para modo noche.</desc>
+<title>Nicole en Camino</title>
+<desc>Insignia circular color crema con una N trazada a mano en rosa vino y una pequeña flor de cinco pétalos; variante oscura para modo noche.</desc>
 <style>
 .fondo{fill:#fdf9f0;}
 .aro{fill:none;stroke:#d7c1c1;stroke-width:2;}
@@ -16,8 +16,8 @@
 </style>
 <circle class="fondo" cx="100" cy="100" r="96"/>
 <circle class="aro" cx="100" cy="100" r="88"/>
-<path class="letra" d="M104,66 L104,120 Q104,148 78,148 Q62,148 54,135"/>
-<g transform="translate(133,68)">
+<path class="letra" d="M60,140 L60,68 Q60,60 66,66 L110,134 Q116,142 116,134 L116,58"/>
+<g transform="translate(141,72)">
 <g class="petalo">
 <ellipse cx="0" cy="-9" rx="5.4" ry="7"/>
 <ellipse cx="0" cy="-9" rx="5.4" ry="7" transform="rotate(72)"/>

@@ -72,7 +72,7 @@ class Regalo(Base):
 
 
 class FotoRegalo(Base):
-    """Foto de Julia usando el regalo, para compartirle a quien lo dio.
+    """Foto de Nicole usando el regalo, para compartirle a quien lo dio.
 
     Cuelga del regalo y no del item: si dos personas regalaron lo mismo,
     cada una tiene su foto.

@@ -9,7 +9,7 @@ datos. Este documento existe para no perder las decisiones ya tomadas.
 
 Hoy hay dos superficies: la app de administración (densa, funcional) y la
 wishlist pública (una grilla mínima). Falta la **cara linda del proyecto**:
-la página que se comparte por mensaje, con la identidad visual de Julia,
+la página que se comparte por mensaje, con la identidad visual de Nicole,
 que sirve tanto para agradecer como para invitar a regalar.
 
 El diseño de referencia se hizo en Google Stitch (ver

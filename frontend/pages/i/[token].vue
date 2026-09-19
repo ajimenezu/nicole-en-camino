@@ -10,8 +10,8 @@ const runtime = useRuntimeConfig()
 
 const token = route.params.token as string
 
-const LOGO = '/logo-julia.png'
-const LOGO_DARK = '/logo-julia-dark.png'
+const LOGO = '/logo-nicole.png'
+const LOGO_DARK = '/logo-nicole-dark.png'
 const logoOk = ref(true)
 
 interface InvitacionApi {
@@ -41,7 +41,7 @@ onMounted(async () => {
   }
 })
 
-useHead(() => ({ title: datos.value?.nombre_app ?? 'Julia en Camino' }))
+useHead(() => ({ title: datos.value?.nombre_app ?? 'Nicole en Camino' }))
 </script>
 
 <template>
@@ -60,7 +60,7 @@ useHead(() => ({ title: datos.value?.nombre_app ?? 'Julia en Camino' }))
       <h1
         class="mt-2 font-serif text-2xl italic text-pink-800 dark:text-pink-200"
       >
-        {{ datos?.nombre_app ?? 'Julia en Camino' }}
+        {{ datos?.nombre_app ?? 'Nicole en Camino' }}
       </h1>
     </header>
 

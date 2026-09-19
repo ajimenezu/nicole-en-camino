@@ -23,7 +23,7 @@ CONTENT_TYPES_PERMITIDOS = {
 MAX_BYTES = 5 * 1024 * 1024  # 5 MB
 
 # Tres colecciones: fotos de referencia del catálogo (items/), fotos de
-# Julia usando cada regalo (regalos/) y las láminas de invitación
+# Nicole usando cada regalo (regalos/) y las láminas de invitación
 # (invitaciones/).
 _KEY_RE = re.compile(
     r"^(items|regalos|invitaciones)/(\d+)/[0-9a-f-]{36}\.(jpg|png|webp)$"

@@ -217,18 +217,18 @@ class TestVariasInvitaciones:
         assert r.status_code == 422
 
 
-class TestComentarioParaJulia:
+class TestComentarioParaNicole:
     def test_se_guarda_el_comentario(self, client, db):
         r = client.post(
             f"/i/{_token(db)}/rsvp",
             json={
                 "nombre": "Hannia",
                 "asistira": True,
-                "comentario": "Te esperamos con muchas ganas, Julia",
+                "comentario": "Te esperamos con muchas ganas, Nicole",
             },
         )
         assert r.status_code == 201
-        assert r.json()["comentario"] == "Te esperamos con muchas ganas, Julia"
+        assert r.json()["comentario"] == "Te esperamos con muchas ganas, Nicole"
 
     def test_es_opcional(self, client, db):
         r = client.post(

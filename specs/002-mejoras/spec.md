@@ -14,7 +14,7 @@ Con la v1 en uso aparecen tres huecos concretos:
    lleva el item entero de la lista.
 2. Cuando el catálogo crece, el invitado **no sabe qué hace falta de
    verdad** ni cuánto se espera que gaste.
-3. Después de que nazca Julia, ubicar algo exige recorrer el catálogo,
+3. Después de que nazca Nicole, ubicar algo exige recorrer el catálogo,
    aunque el dato de la caja ya esté guardado.
 
 ## Historias de usuario
@@ -110,7 +110,7 @@ Con la v1 en uso aparecen tres huecos concretos:
 11. **Instalar la app en el celular**
     Como admin, quiero poder instalar la app en el teléfono, para
     entrar de una sin abrir el navegador.
-    - AC: instalable (PWA) con el ícono de Julia y el nombre configurado.
+    - AC: instalable (PWA) con el ícono de Nicole y el nombre configurado.
     - AC: la wishlist pública también es instalable para los invitados.
 
 ## Reglas de negocio nuevas

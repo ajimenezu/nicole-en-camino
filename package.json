@@ -1,7 +1,7 @@
 {
   "name": "friendly-parakeet",
   "private": true,
-  "description": "Julia en Camino — catálogo y wishlist para bebé",
+  "description": "Nicole en Camino — catálogo y wishlist para bebé",
   "scripts": {
     "prepare": "husky || true"
   },

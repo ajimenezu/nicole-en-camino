@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, field_validator
 class RsvpCreate(BaseModel):
     nombre: str = Field(min_length=1, max_length=255)
     asistira: bool
-    # Mensaje para Julia, para leerle después.
+    # Mensaje para Nicole, para leerle después.
     cantidad: str | None = Field(default=None, max_length=255)
     comentario: str | None = Field(default=None, max_length=2000)
 

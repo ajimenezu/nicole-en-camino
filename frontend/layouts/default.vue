@@ -5,8 +5,8 @@ onMounted(() => config.fetch())
 // El mismo logo de la guirnalda que usa la página pública. <picture>
 // elige la variante clara u oscura sin JavaScript, así no parpadea al
 // cargar. Si el archivo no está, cae al ícono simple.
-const LOGO = '/logo-julia.png'
-const LOGO_DARK = '/logo-julia-dark.png'
+const LOGO = '/logo-nicole.png'
+const LOGO_DARK = '/logo-nicole-dark.png'
 const logoOk = ref(true)
 </script>
 

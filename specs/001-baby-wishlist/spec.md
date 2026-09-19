@@ -108,7 +108,7 @@ guardaron cada cosa.
 11. **Configurar el nombre de la app**
     Como admin, quiero poder cambiar el nombre que se muestra en la app
     desde una pantalla de configuración.
-    - AC: el valor por defecto es "Julia en Camino".
+    - AC: el valor por defecto es "Nicole en Camino".
     - AC: el nombre configurado se muestra en el header tanto de la vista
       admin como de la wishlist pública.
 
@@ -135,7 +135,7 @@ guardaron cada cosa.
 
 ## Identidad visual
 
-- **Nombre por defecto**: "Julia en Camino" (editable, ver historia 11).
+- **Nombre por defecto**: "Nicole en Camino" (editable, ver historia 11).
 - **Ícono**: insignia circular con una "J" trazada a mano y un pequeño
   destello decorativo; cambia automáticamente a la variante oscura según
   el modo del sistema.

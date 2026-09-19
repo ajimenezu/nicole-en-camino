@@ -16,7 +16,7 @@ GET /w/{share_token}
 ```
 
 Cada entrada de `recibidos` lleva: nombre del objeto, persona, y una
-foto (la de Julia usando el regalo si existe; si no, la de referencia del
+foto (la de Nicole usando el regalo si existe; si no, la de referencia del
 catálogo).
 
 Reglas de qué entra al muro:
@@ -71,7 +71,7 @@ en runtime.
 1. **Hero** — nombre configurado, la frase "Florece donde estás plantada"
    (quitada después, en la 005)
    y la ilustración floral. Si la ilustración no está en
-   `frontend/public/`, el bloque se degrada al ícono de Julia sin romper.
+   `frontend/public/`, el bloque se degrada al ícono de Nicole sin romper.
 2. **Regalos recibidos** — grilla de tarjetas con la foto, el objeto y de
    parte de quién. No aparece si todavía no hay ninguno.
 3. **Lista de deseos** — lo que ya existe (agrupado por categoría,

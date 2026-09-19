@@ -20,7 +20,7 @@ regalos (nueva) — el hecho: "recibimos X de parte de Y"
                      — solo si vino por la wishlist
   created_at
 
-fotos_regalo (nueva) — Julia usando el regalo
+fotos_regalo (nueva) — Nicole usando el regalo
   id, regalo_id (FK, CASCADE), url, orden
 
 items (cambios)
@@ -30,7 +30,7 @@ items (cambios)
 ```
 
 `fotos_item` se mantiene para las fotos de referencia (las de la tienda).
-Las fotos de Julia son otra cosa y viven en `fotos_regalo`.
+Las fotos de Nicole son otra cosa y viven en `fotos_regalo`.
 
 ### Etapas
 
@@ -100,7 +100,7 @@ Una sola, con estos pasos:
 - **Sección "Regalos"** nueva: lista con filtros por persona, por
   pendientes de agradecer y por fecha; y una vista agrupada por persona
   para agradecer de a uno.
-- **Fotos de Julia** en el detalle de cada regalo, con subida por presign
+- **Fotos de Nicole** en el detalle de cada regalo, con subida por presign
   y opción de descargar para compartir a mano.
 - **Filtro por etapa** en el catálogo, junto a los de estado.
 - **Búsqueda ampliada**: cada resultado muestra caja, etapa y quién lo
@@ -114,6 +114,6 @@ Una sola, con estos pasos:
 2. **El backfill del string concatenado es imperfecto** por diseño: no
    hay forma segura de partirlo. Queda como un regalo con el string
    entero, para revisar a mano si hiciera falta.
-3. **Las fotos de Julia requieren R2 configurado.** Sin credenciales la
+3. **Las fotos de Nicole requieren R2 configurado.** Sin credenciales la
    sección queda visible pero los endpoints responden 503, igual que las
    fotos de referencia hoy.

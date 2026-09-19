@@ -99,7 +99,7 @@ async function quitarImagen() {
           <UTextarea
             v-model="f.texto"
             :rows="2"
-            placeholder="Acompañanos a celebrar la llegada de Julia"
+            placeholder="Acompañanos a celebrar la llegada de Nicole"
           />
         </UFormGroup>
         <UFormGroup label="Fecha">
@@ -118,7 +118,7 @@ async function quitarImagen() {
           <UTextarea
             v-model="f.aviso"
             :rows="2"
-            placeholder="Confirmá tu asistencia antes del 7 de noviembre, en el siguiente formulario o con los papás de Julia por WhatsApp"
+            placeholder="Confirmá tu asistencia antes del 7 de noviembre, en el siguiente formulario o con los papás de Nicole por WhatsApp"
           />
         </UFormGroup>
 

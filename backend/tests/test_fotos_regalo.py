@@ -43,7 +43,7 @@ def test_presign_usa_el_prefijo_de_regalos(
         headers=auth_headers,
     )
     assert r.status_code == 200
-    # El prefijo separa las fotos de Julia de las de referencia del catálogo.
+    # El prefijo separa las fotos de Nicole de las de referencia del catálogo.
     assert r.json()["key"].startswith(f"regalos/{regalo.id}/")
 
 

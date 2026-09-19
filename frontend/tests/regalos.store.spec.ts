@@ -162,7 +162,7 @@ describe('store regalos', () => {
   it('subirFoto usa presign y sube directo a R2', async () => {
     const store = useRegalosStore()
     store.regalos = [regalo({ id: 1 })]
-    const file = new File(['x'], 'julia.jpg', { type: 'image/jpeg' })
+    const file = new File(['x'], 'nicole.jpg', { type: 'image/jpeg' })
     apiMock
       .mockResolvedValueOnce({
         upload_url: 'https://r2.fake/put/regalos/1/a.jpg',

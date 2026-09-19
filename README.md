@@ -1,6 +1,6 @@
 <div align="center">
   <img src="frontend/public/icon.svg" width="96" alt="">
-  <h1>Julia en Camino</h1>
+  <h1>Nicole en Camino</h1>
   <p>Catálogo y wishlist para la llegada de un bebé.</p>
 </div>
 
@@ -15,7 +15,7 @@ el regalo llega.
 **Registrar lo que llega:** un botón anota "recibimos X de parte de Y" en
 un solo paso — si el objeto no estaba en el catálogo se crea ahí mismo, y
 el nombre de la persona se autocompleta con los que ya usaron para que no
-queden variantes del mismo nombre. Se le puede sumar una foto de Julia
+queden variantes del mismo nombre. Se le puede sumar una foto de Nicole
 usando el regalo, para mandársela después a quien lo dio.
 
 **Agradecer sin olvidarse de nadie:** una vista agrupa todo lo que regaló
@@ -153,7 +153,7 @@ El proyecto se construyó con spec-driven development, en tandas:
 - [`002-mejoras/`](specs/002-mejoras/) — cantidad, categorías, prioridad,
   precio, buscador, mensaje y PWA.
 - [`003-registro-regalos/`](specs/003-registro-regalos/) — el registro de
-  regalos, agradecimientos, etapas y las fotos de Julia.
+  regalos, agradecimientos, etapas y las fotos de Nicole.
 - [`004-pagina-publica/`](specs/004-pagina-publica/) — la página de
   celebración. **Pendiente**, solo las decisiones tomadas.
 

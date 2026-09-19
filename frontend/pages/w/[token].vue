@@ -10,7 +10,7 @@ const toast = useToast()
 const { reservas, cargar, guardar, olvidar } = useReservasLocales()
 
 const token = computed(() => String(route.params.token))
-const nombreApp = ref('Julia en Camino')
+const nombreApp = ref('Nicole en Camino')
 const items = ref<ItemPublico[]>([])
 const cargando = ref(true)
 const error = ref(false)
@@ -21,8 +21,8 @@ const mensajeInvitado = ref('')
 const enviando = ref(false)
 // Se ata en runtime y no como src estático: si el archivo todavía no está
 // en public/, Vite fallaría al resolver el import en build.
-const LOGO = '/logo-julia.png'
-const LOGO_DARK = '/logo-julia-dark.png'
+const LOGO = '/logo-nicole.png'
+const LOGO_DARK = '/logo-nicole-dark.png'
 const logoOk = ref(true)
 
 // Botón de volver arriba: aparece recién cuando el hero salió de vista.
