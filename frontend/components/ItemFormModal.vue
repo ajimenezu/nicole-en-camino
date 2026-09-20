@@ -156,7 +156,7 @@ async function guardar() {
 
 async function onFotoSeleccionada(file: File) {
   // Al crear todavía no hay id contra el cual firmar la subida (la key
-  // en R2 es items/{id}/… y el backend valida esa pertenencia). Se
+  // en el storage es items/{id}/… y el backend valida esa pertenencia). Se
   // retiene el archivo y se sube apenas el item exista.
   if (!props.item) {
     fotosPendientes.value.push({ file, url: URL.createObjectURL(file) })
@@ -170,7 +170,7 @@ async function onFotoSeleccionada(file: File) {
     toast.add({
       title: 'No se pudo subir la foto',
       description:
-        'Solo imágenes jpeg/png/webp de hasta 5 MB (requiere R2 configurado).',
+        'Solo imágenes jpeg/png/webp de hasta 5 MB (requiere el storage de fotos configurado).',
       color: 'red',
     })
   } finally {

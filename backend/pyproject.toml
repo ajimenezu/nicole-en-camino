@@ -23,4 +23,9 @@ ignore = [
 testpaths = ["tests"]
 
 [tool.coverage.run]
-omit = ["tests/*", "alembic/*", "seed_admin.py"]
+omit = ["tests/*", "alembic/*"]
+
+# Vercel corre esto en cada deploy, después de instalar requirements.txt:
+# migraciones y cuenta admin, solo en producción (ver build_vercel.py).
+[tool.vercel.scripts]
+build = "python build_vercel.py"

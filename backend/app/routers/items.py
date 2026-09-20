@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session, selectinload
 
-from app.core import storage_r2
+from app.core import storage
 from app.core.database import get_db
 from app.core.deps import get_current_admin
 from app.models.admin import Admin
@@ -325,11 +325,11 @@ def eliminar_item(
                 "primero para poder eliminarlo."
             ),
         )
-    # Las fotos en DB caen por cascade; los objetos en R2 se borran aquí.
-    if storage_r2.esta_configurado():
+    # Las fotos en DB caen por cascade; los objetos del storage se borran aquí.
+    if storage.esta_configurado():
         for foto in item.fotos:
-            key = storage_r2.key_desde_url(foto.url)
+            key = storage.key_desde_url(foto.url)
             if key:
-                storage_r2.borrar_objeto(key)
+                storage.borrar_objeto(key)
     db.delete(item)
     db.commit()

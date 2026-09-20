@@ -1,6 +1,6 @@
 import pytest
 
-from app.core import storage_r2
+from app.core import storage
 from app.models.regalo import FotoRegalo, Regalo
 
 
@@ -13,19 +13,17 @@ def regalo(db, item) -> Regalo:
 
 
 @pytest.fixture
-def r2_configurado(monkeypatch):
-    monkeypatch.setattr(storage_r2, "esta_configurado", lambda: True)
+def storage_configurado(monkeypatch):
+    monkeypatch.setattr(storage, "esta_configurado", lambda: True)
     monkeypatch.setattr(
-        storage_r2, "presign_put", lambda key, ct: f"https://r2.fake/put/{key}"
+        storage, "presign_put", lambda key, ct: f"https://storage.fake/put/{key}"
     )
-    monkeypatch.setattr(storage_r2, "objeto_existe", lambda key: True)
-    monkeypatch.setattr(storage_r2, "borrar_objeto", lambda key: None)
-    monkeypatch.setattr(
-        storage_r2, "url_publica", lambda key: f"https://cdn.fake/{key}"
-    )
+    monkeypatch.setattr(storage, "objeto_existe", lambda key: True)
+    monkeypatch.setattr(storage, "borrar_objeto", lambda key: None)
+    monkeypatch.setattr(storage, "url_publica", lambda key: f"https://cdn.fake/{key}")
 
 
-def test_presign_sin_r2_da_503(client, auth_headers, regalo):
+def test_presign_sin_storage_da_503(client, auth_headers, regalo):
     r = client.post(
         f"/regalos/{regalo.id}/fotos/presign",
         json={"content_type": "image/jpeg", "size_bytes": 1000},
@@ -35,7 +33,7 @@ def test_presign_sin_r2_da_503(client, auth_headers, regalo):
 
 
 def test_presign_usa_el_prefijo_de_regalos(
-    client, auth_headers, regalo, r2_configurado
+    client, auth_headers, regalo, storage_configurado
 ):
     r = client.post(
         f"/regalos/{regalo.id}/fotos/presign",
@@ -47,7 +45,7 @@ def test_presign_usa_el_prefijo_de_regalos(
     assert r.json()["key"].startswith(f"regalos/{regalo.id}/")
 
 
-def test_presign_tipo_no_permitido(client, auth_headers, regalo, r2_configurado):
+def test_presign_tipo_no_permitido(client, auth_headers, regalo, storage_configurado):
     r = client.post(
         f"/regalos/{regalo.id}/fotos/presign",
         json={"content_type": "video/mp4", "size_bytes": 1000},
@@ -56,7 +54,7 @@ def test_presign_tipo_no_permitido(client, auth_headers, regalo, r2_configurado)
     assert r.status_code == 422
 
 
-def test_presign_muy_grande(client, auth_headers, regalo, r2_configurado):
+def test_presign_muy_grande(client, auth_headers, regalo, storage_configurado):
     r = client.post(
         f"/regalos/{regalo.id}/fotos/presign",
         json={"content_type": "image/jpeg", "size_bytes": 6 * 1024 * 1024},
@@ -65,8 +63,8 @@ def test_presign_muy_grande(client, auth_headers, regalo, r2_configurado):
     assert r.status_code == 422
 
 
-def test_confirmar_foto(client, auth_headers, regalo, r2_configurado):
-    key = storage_r2.generar_key(regalo.id, "image/jpeg", prefijo="regalos")
+def test_confirmar_foto(client, auth_headers, regalo, storage_configurado):
+    key = storage.generar_key(regalo.id, "image/jpeg", prefijo="regalos")
     r = client.post(
         f"/regalos/{regalo.id}/fotos",
         json={"key": key, "orden": 0},
@@ -76,31 +74,35 @@ def test_confirmar_foto(client, auth_headers, regalo, r2_configurado):
     assert r.json()["url"] == f"https://cdn.fake/{key}"
 
 
-def test_key_de_otro_regalo_da_422(client, auth_headers, regalo, r2_configurado):
-    key = storage_r2.generar_key(regalo.id + 100, "image/jpeg", prefijo="regalos")
+def test_key_de_otro_regalo_da_422(client, auth_headers, regalo, storage_configurado):
+    key = storage.generar_key(regalo.id + 100, "image/jpeg", prefijo="regalos")
     r = client.post(
         f"/regalos/{regalo.id}/fotos", json={"key": key}, headers=auth_headers
     )
     assert r.status_code == 422
 
 
-def test_key_de_item_no_sirve_para_regalo(client, auth_headers, regalo, r2_configurado):
+def test_key_de_item_no_sirve_para_regalo(
+    client, auth_headers, regalo, storage_configurado
+):
     """Una key del catálogo no puede colarse como foto de un regalo."""
-    key = storage_r2.generar_key(regalo.id, "image/jpeg", prefijo="items")
+    key = storage.generar_key(regalo.id, "image/jpeg", prefijo="items")
     r = client.post(
         f"/regalos/{regalo.id}/fotos", json={"key": key}, headers=auth_headers
     )
     assert r.status_code == 422
 
 
-def test_la_foto_aparece_en_el_regalo(client, auth_headers, regalo, r2_configurado):
-    key = storage_r2.generar_key(regalo.id, "image/jpeg", prefijo="regalos")
+def test_la_foto_aparece_en_el_regalo(
+    client, auth_headers, regalo, storage_configurado
+):
+    key = storage.generar_key(regalo.id, "image/jpeg", prefijo="regalos")
     client.post(f"/regalos/{regalo.id}/fotos", json={"key": key}, headers=auth_headers)
     listado = client.get("/regalos", headers=auth_headers).json()
     assert len(listado[0]["fotos"]) == 1
 
 
-def test_eliminar_foto(client, auth_headers, regalo, r2_configurado, db):
+def test_eliminar_foto(client, auth_headers, regalo, storage_configurado, db):
     foto = FotoRegalo(
         regalo_id=regalo.id, url="https://cdn.fake/regalos/1/a.jpg", orden=0
     )
@@ -117,7 +119,7 @@ def test_eliminar_foto_inexistente_da_404(client, auth_headers, regalo):
 
 
 def test_borrar_el_regalo_borra_sus_fotos(
-    client, auth_headers, regalo, r2_configurado, db
+    client, auth_headers, regalo, storage_configurado, db
 ):
     db.add(FotoRegalo(regalo_id=regalo.id, url="https://cdn.fake/regalos/1/a.jpg"))
     db.commit()
@@ -135,13 +137,13 @@ def test_fotos_requieren_auth(client, regalo):
 
 def test_key_pertenece_valida_el_prefijo():
     uuid_falso = "9c5b94b1-35ad-49bb-b118-8e8fc24abf80"
-    assert storage_r2.key_pertenece_a_item(
+    assert storage.key_pertenece_a_item(
         f"regalos/5/{uuid_falso}.jpg", 5, prefijo="regalos"
     )
-    assert not storage_r2.key_pertenece_a_item(
+    assert not storage.key_pertenece_a_item(
         f"items/5/{uuid_falso}.jpg", 5, prefijo="regalos"
     )
-    assert not storage_r2.key_pertenece_a_item(
+    assert not storage.key_pertenece_a_item(
         f"regalos/5/{uuid_falso}.jpg", 5, prefijo="items"
     )
-    assert not storage_r2.key_pertenece_a_item("regalos/5/../evil.jpg", 5, "regalos")
+    assert not storage.key_pertenece_a_item("regalos/5/../evil.jpg", 5, "regalos")

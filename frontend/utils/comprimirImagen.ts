@@ -1,4 +1,4 @@
-/** Achica una foto en el navegador antes de subirla a R2.
+/** Achica una foto en el navegador antes de subirla al storage.
  *
  * Hace falta por tres motivos, todos del caso "sacar la foto con el
  * celular":
@@ -18,7 +18,7 @@
 export const LADO_MAXIMO = 1600
 const CALIDAD = 0.82
 
-/** Formatos que el backend acepta (ver storage_r2.CONTENT_TYPES_PERMITIDOS). */
+/** Formatos que el backend acepta (ver storage.CONTENT_TYPES_PERMITIDOS). */
 const PERMITIDOS = new Set(['image/jpeg', 'image/png', 'image/webp'])
 
 /** Escala para que el lado más largo no pase de `maximo`, sin deformar.

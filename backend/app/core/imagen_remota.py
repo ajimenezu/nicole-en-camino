@@ -10,7 +10,7 @@ fallar en producción aunque funcione en local.
 
 Seguridad: la URL la elige quien entra al admin, pero el pedido sale
 desde el servidor, y eso es un SSRF en potencia — alguien podría
-apuntarlo a `169.254.169.254` o a un servicio interno de Railway. Por
+apuntarlo a `169.254.169.254` o a un servicio interno de la red. Por
 eso se valida el esquema y se resuelve el host contra rangos privados
 **en cada salto** del redirect, no solo en la URL original.
 """
@@ -23,7 +23,7 @@ from urllib.parse import urljoin, urlparse
 
 import httpx
 
-from app.core import storage_r2
+from app.core import storage
 
 TIMEOUT = 10.0
 MAX_REDIRECCIONES = 3
@@ -145,9 +145,9 @@ def obtener_imagen(url: str) -> tuple[bytes, str]:
     que copiar la dirección de la imagen a mano.
     """
     with httpx.Client(timeout=TIMEOUT) as cliente:
-        contenido, tipo, url_final = _descargar(cliente, url, storage_r2.MAX_BYTES)
+        contenido, tipo, url_final = _descargar(cliente, url, storage.MAX_BYTES)
 
-        if tipo in storage_r2.CONTENT_TYPES_PERMITIDOS:
+        if tipo in storage.CONTENT_TYPES_PERMITIDOS:
             return contenido, tipo
 
         if "html" not in tipo:
@@ -164,8 +164,8 @@ def obtener_imagen(url: str) -> tuple[bytes, str]:
                 "dirección de la imagen directamente."
             )
 
-        imagen, tipo_imagen, _ = _descargar(cliente, candidata, storage_r2.MAX_BYTES)
-        if tipo_imagen not in storage_r2.CONTENT_TYPES_PERMITIDOS:
+        imagen, tipo_imagen, _ = _descargar(cliente, candidata, storage.MAX_BYTES)
+        if tipo_imagen not in storage.CONTENT_TYPES_PERMITIDOS:
             raise ImagenRemotaError(
                 "La imagen de esa página está en un formato no admitido"
             )

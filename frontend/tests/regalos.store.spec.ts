@@ -159,7 +159,7 @@ describe('store regalos', () => {
     expect(store.regalos.map((r) => r.id)).toEqual([2])
   })
 
-  it('subirFoto usa presign y sube directo a R2', async () => {
+  it('subirFoto usa presign y sube directo al storage', async () => {
     const store = useRegalosStore()
     store.regalos = [regalo({ id: 1 })]
     const file = new File(['x'], 'nicole.jpg', { type: 'image/jpeg' })

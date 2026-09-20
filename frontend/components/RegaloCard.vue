@@ -64,7 +64,7 @@ async function onFoto(file: File) {
   } catch {
     toast.add({
       title: 'No se pudo subir la foto',
-      description: 'Solo jpeg/png/webp de hasta 5 MB (requiere R2 configurado).',
+      description: 'Solo jpeg/png/webp de hasta 5 MB (requiere el storage de fotos configurado).',
       color: 'red',
     })
   } finally {

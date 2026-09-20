@@ -1,5 +1,5 @@
-"""El seed corre en cada deploy, así que su comportamiento sin variables
-definidas importa: no debe romper el pipeline."""
+"""El seed corre en cada deploy de producción, así que su comportamiento
+sin variables definidas importa: no debe romper el pipeline."""
 
 import seed_admin
 from app.models.admin import Admin
@@ -50,3 +50,12 @@ def test_es_idempotente(monkeypatch, db, admin):
     assert db.query(Admin).count() == 1
     actualizado = db.query(Admin).filter(Admin.email == email).one()
     assert actualizado.password_hash != hash_viejo
+
+
+def test_email_que_el_login_rechaza_es_error(monkeypatch, capsys):
+    """Un dominio .local pasa como texto pero el login lo rechaza: crear
+    esa cuenta dejaría al admin sin forma de entrar."""
+    monkeypatch.setenv("ADMIN_EMAIL", "admin@casa.local")
+    monkeypatch.setenv("ADMIN_PASSWORD", "clave-larga-123")
+    assert seed_admin.main() == 1
+    assert "no es un email válido" in capsys.readouterr().out
