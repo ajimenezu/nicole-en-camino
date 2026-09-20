@@ -71,7 +71,7 @@ export default defineNuxtConfig({
         { property: 'og:site_name', content: SEO.titulo },
         { property: 'og:title', content: SEO.titulo },
         { property: 'og:description', content: SEO.descripcion },
-        { property: 'og:image', content: `${SEO.sitio}/og-julia.jpg` },
+        { property: 'og:image', content: `${SEO.sitio}/og-nicole.jpg` },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
         { property: 'og:image:alt', content: 'El monograma de Nicole entre flores' },
@@ -79,7 +79,7 @@ export default defineNuxtConfig({
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: SEO.titulo },
         { name: 'twitter:description', content: SEO.descripcion },
-        { name: 'twitter:image', content: `${SEO.sitio}/og-julia.jpg` },
+        { name: 'twitter:image', content: `${SEO.sitio}/og-nicole.jpg` },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/icon.svg' },
