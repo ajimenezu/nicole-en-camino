@@ -1,9 +1,13 @@
-[tool.ruff]
+# La configuración de las herramientas vive en archivos propios y no en
+# pyproject.toml: Vercel, al ver un pyproject, asume que ahí están
+# declaradas las dependencias e intenta instalarlas con uv, que falla
+# porque este proyecto no es un paquete. Sin pyproject usa
+# requirements.txt, que es de donde salen las dependencias de verdad.
 line-length = 88
 target-version = "py313"
 exclude = ["alembic/versions", ".venv"]
 
-[tool.ruff.lint]
+[lint]
 select = ["E", "F", "I", "UP", "B", "C4"]
 ignore = [
     "E501",
@@ -13,19 +17,8 @@ ignore = [
     "UP042",
 ]
 
-[tool.ruff.lint.per-file-ignores]
+[lint.per-file-ignores]
 # Los imports de modelos en env.py y conftest.py van después de manipular
 # sys.path, y algunos existen solo para registrarse en el metadata.
 "alembic/env.py" = ["E402", "F401"]
 "tests/conftest.py" = ["E402", "F401"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-
-[tool.coverage.run]
-omit = ["tests/*", "alembic/*"]
-
-# Vercel corre esto en cada deploy, después de instalar requirements.txt:
-# migraciones y cuenta admin, solo en producción (ver build_vercel.py).
-[tool.vercel.scripts]
-build = "python build_vercel.py"

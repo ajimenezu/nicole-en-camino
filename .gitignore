@@ -1,5 +1,6 @@
 node_modules/
 .env
+.env*.local
 __pycache__/
 *.pyc
 .venv/
@@ -13,3 +14,4 @@ htmlcov/
 .ruff_cache/
 .coverage
 coverage.xml
+.vercel/
