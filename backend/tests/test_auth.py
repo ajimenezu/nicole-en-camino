@@ -61,10 +61,9 @@ def test_health(client):
 
 
 class TestFrenoDeFuerzaBruta:
-    """El freno cuenta por email y no por IP: detras del proxy de Railway
-    todas las peticiones llegan con la misma IP, asi que un limite por IP
-    seria un balde global que cualquiera podria agotar para dejar a los
-    admins afuera."""
+    """El freno cuenta por email y no por IP: sigue a la cuenta atacada
+    aunque los intentos lleguen desde IPs distintas, y quien ataca solo se
+    bloquea a si mismo."""
 
     def _fallar(self, client, veces, email="admin@test.com"):
         for _ in range(veces):

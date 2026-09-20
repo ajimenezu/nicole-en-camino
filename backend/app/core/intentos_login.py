@@ -1,25 +1,16 @@
 """Freno de fuerza bruta para el login, contado por email.
 
-Por que no alcanza con limitar por IP. slowapi usa `get_remote_address`,
-que lee `request.client.host`. Detras del proxy de Railway eso es la IP
-del proxy, no la de quien entra: uvicorn arranca sin
-`--forwarded-allow-ips`, asi que su default (`127.0.0.1`) no confia en el
-proxy y `X-Forwarded-For` ni se mira. Un limite "por IP" seria entonces
-un unico balde compartido por todo el mundo: no aislaria al atacante, y
-cualquiera podria agotarlo y dejar a los admins sin poder entrar.
+Por que no alcanza con limitar por IP: quien ataca puede rotar de IP
+(una red movil, una VPN), y el limite por IP de slowapi es holgado a
+proposito. El freno por email en cambio sigue a la cuenta atacada, sin
+importar desde donde lleguen los intentos. Cada cuenta tiene su ventana
+y el limite por IP queda como freno grueso de respaldo.
 
-Subir el default a `*` tampoco sirve. En esta version de uvicorn, cuando
-confia en todos, toma el PRIMER valor de `X-Forwarded-For`, que lo
-escribe el cliente: falsear la IP y saltarse el limite pasaria a ser
-trivial.
-
-Por eso el freno va por email. Cada cuenta tiene su ventana, quien
-ataca solo se bloquea a si mismo, y el limite por IP de slowapi queda
-como freno grueso de respaldo.
-
-Vive en memoria a proposito: hay una sola instancia y los intentos no
-valen la pena persistirlos. Con mas de un worker esto habria que moverlo
-a la base o a Redis, porque cada proceso llevaria su propia cuenta.
+Vive en memoria a proposito, y eso tiene un costo conocido: en Vercel
+puede haber varias instancias de la funcion a la vez y cada una lleva su
+propia cuenta, que ademas se pierde cuando la instancia se apaga. El
+freno sigue cortando rafagas, pero es aproximado. Si hiciera falta uno
+exacto, esto va a la base o a Redis.
 """
 
 from datetime import UTC, datetime, timedelta

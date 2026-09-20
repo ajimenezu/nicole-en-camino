@@ -20,9 +20,9 @@ _HASH_DE_DESCARTE = hash_password(secrets.token_urlsafe(32))
 
 
 @router.post("/login", response_model=TokenResponse)
-# Freno grueso. Detrás del proxy de Railway esto es un balde global y no
-# uno por IP — ver app/core/intentos_login.py —, así que va holgado: el
-# freno que de verdad aísla al atacante es el de por email, abajo.
+# Freno grueso, por IP (ver app/core/ratelimit.py). Va holgado porque
+# vive en memoria de cada instancia de la función, así que no es exacto:
+# el freno que de verdad aísla al atacante es el de por email, abajo.
 @limiter.limit("20/minute")
 def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     email = body.email.lower()

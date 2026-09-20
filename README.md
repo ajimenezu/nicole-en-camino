@@ -44,8 +44,8 @@ nombre no aparece en ningún byte de ninguna respuesta de admin.
 | Backend | FastAPI · SQLAlchemy 2.0 · Alembic · PostgreSQL 16 |
 | Frontend | Nuxt 3 · TypeScript · Nuxt UI v2 · Pinia |
 | Auth | JWT (PyJWT) · bcrypt |
-| Fotos | Cloudflare R2 (S3-compatible, subida directa con presign) |
-| Deploy | Railway (API) · Vercel (web) |
+| Fotos | Supabase Storage vía su API S3 (subida directa con presign) |
+| Deploy | Vercel (web y API) · Supabase (Postgres y fotos) |
 
 ## Setup local
 
@@ -63,8 +63,12 @@ otros proyectos).
 ### 2. Backend
 
 ```bash
-cd backend && python -m venv .venv && .venv/Scripts/pip install -r requirements.txt
+cd backend && python -m venv .venv && .venv/Scripts/pip install -r requirements-dev.txt
 ```
+
+Los comandos usan las rutas de Windows; en macOS y Linux son `.venv/bin/`.
+`requirements-dev.txt` suma pytest y ruff a lo de `requirements.txt`, que
+es lo único que se instala en producción.
 
 Copiá `.env.example` a `.env` y ajustá lo que necesites. Después aplicá
 las migraciones y creá la cuenta admin:
@@ -111,39 +115,64 @@ convención de [Conventional Commits](https://www.conventionalcommits.org/).
 Los commits se validan también localmente con un hook de husky, que se
 instala solo al correr `npm install` en la raíz del repo.
 
-## Fotos (Cloudflare R2)
+## Fotos
 
-Las fotos son opcionales: sin configurar R2 la app funciona completa y los
-endpoints de foto responden 503 con un mensaje claro.
+Las fotos son opcionales: sin storage configurado la app funciona completa
+y los endpoints de foto responden 503 con un mensaje claro.
 
-Para activarlas, creá un bucket en Cloudflare R2 y completá en el `.env`
-del backend: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`,
-`R2_BUCKET` y `R2_PUBLIC_URL`. El backend solo firma URLs — el archivo
-viaja directo del navegador a R2, restringido a jpeg/png/webp de hasta
-5 MB.
+Sirve cualquier storage S3-compatible; en producción es Supabase Storage.
+Se configura con las variables `STORAGE_*` del `.env` (ver
+`.env.example`). El backend solo firma URLs — el archivo viaja directo
+del navegador al storage, restringido a jpeg/png/webp de hasta 5 MB.
 
 ## Deploy
 
-### Backend en Railway
+Dos proyectos de Vercel sobre este mismo repo, más un proyecto de
+Supabase.
 
-Railway detecta `backend/railway.json`, que corre `alembic upgrade head`
-como pre-deploy. Variables de entorno necesarias:
+### Supabase
+
+1. Un proyecto **solo para esta app**, en la misma región que las
+   funciones de Vercel (por defecto Vercel usa `iad1`, que es US East).
+2. **Data API apagada** (Project Settings → Data API). La app no la usa,
+   y aunque la migración `c9d0e1f2a3b4` activa RLS en todas las tablas,
+   apagarla deja una sola puerta de entrada a los datos.
+3. Storage: un bucket **público**, con límite de 5 MB y tipos
+   `image/jpeg, image/png, image/webp`. Supabase aplica esos límites en
+   la subida misma.
+4. Storage → S3: una access key. De ahí salen el endpoint y la región.
+
+### API en Vercel
+
+Root Directory `backend`. Vercel detecta FastAPI solo (`main.py` →
+`app`). En cada deploy de producción corre `build_vercel.py`: aplica las
+migraciones y, si están definidas, crea o actualiza la cuenta admin. Los
+deploys de preview se saltean (`backend/vercel.json`), porque migrarían
+la base real con código sin aprobar.
 
 | Variable | Notas |
 |---|---|
-| `DATABASE_URL` | La genera Railway al agregar Postgres |
+| `DATABASE_URL` | Supabase → Connect → **Transaction pooler** (puerto 6543), con la contraseña de la base |
 | `JWT_SECRET` | 32+ caracteres. Generalo con `python -c "import secrets; print(secrets.token_hex(32))"` |
-| `CORS_ORIGINS` | La URL del frontend en Vercel, sin barra final |
-| `DEBUG` | `false` en producción (activa validaciones del secreto y oculta `/docs`) |
-| `R2_*` | Solo si vas a usar fotos |
+| `CORS_ORIGINS` | La URL del frontend, sin barra final |
+| `STORAGE_ENDPOINT_URL` | `https://<ref>.storage.supabase.co/storage/v1/s3` |
+| `STORAGE_REGION` | La región del proyecto de Supabase, por ejemplo `us-east-1` |
+| `STORAGE_ACCESS_KEY_ID`, `STORAGE_SECRET_ACCESS_KEY` | La access key de S3 |
+| `STORAGE_BUCKET` | El nombre del bucket |
+| `STORAGE_PUBLIC_URL` | `https://<ref>.supabase.co/storage/v1/object/public/<bucket>` |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Solo para el primer deploy: crean la cuenta admin. Borralas después, o cada deploy vuelve a poner esa contraseña |
 
-Después del primer deploy, corré el seed del admin una vez desde la
-consola de Railway con `ADMIN_EMAIL` y `ADMIN_PASSWORD`.
+`DEBUG` no se define: por defecto es `false`, que oculta `/docs` y exige
+un `JWT_SECRET` seguro.
 
 ### Frontend en Vercel
 
-Root directory `frontend`, framework Nuxt (autodetectado). Configurá
-`NUXT_PUBLIC_API_BASE` con la URL pública de la API en Railway.
+Root Directory `frontend`, framework Nuxt (autodetectado).
+
+| Variable | Notas |
+|---|---|
+| `NUXT_PUBLIC_API_BASE` | La URL de la API |
+| `NUXT_PUBLIC_SITE_URL` | La URL del frontend. La usa el preview de WhatsApp para armar la imagen |
 
 ## Documentación del diseño
 

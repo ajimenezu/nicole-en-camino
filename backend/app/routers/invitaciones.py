@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session, selectinload
 
-from app.core import storage_r2
+from app.core import storage
 from app.core.database import get_db
 from app.core.deps import get_current_admin
 from app.core.ratelimit import limiter
@@ -99,10 +99,10 @@ def eliminar(
 ):
     """Se lleva sus confirmaciones: son de ese evento y de ningún otro."""
     inv = _get_or_404(invitacion_id, db)
-    if inv.imagen_url and storage_r2.esta_configurado():
-        key = storage_r2.key_desde_url(inv.imagen_url)
+    if inv.imagen_url and storage.esta_configurado():
+        key = storage.key_desde_url(inv.imagen_url)
         if key:
-            storage_r2.borrar_objeto(key)
+            storage.borrar_objeto(key)
     db.delete(inv)
     db.commit()
 
@@ -119,25 +119,23 @@ def presign_imagen(
     db: Session = Depends(get_db),
     _: Admin = Depends(get_current_admin),
 ):
-    if not storage_r2.esta_configurado():
+    if not storage.esta_configurado():
         raise HTTPException(
             status_code=503,
-            detail="Storage de fotos no configurado (variables R2_* faltantes)",
+            detail="Storage de fotos no configurado (variables STORAGE_* faltantes)",
         )
     _get_or_404(invitacion_id, db)
-    if body.content_type not in storage_r2.CONTENT_TYPES_PERMITIDOS:
+    if body.content_type not in storage.CONTENT_TYPES_PERMITIDOS:
         raise HTTPException(
             status_code=422, detail="Tipo de archivo no permitido (jpeg, png, webp)"
         )
-    if body.size_bytes > storage_r2.MAX_BYTES:
+    if body.size_bytes > storage.MAX_BYTES:
         raise HTTPException(
             status_code=422, detail="La imagen supera el tamaño máximo de 5 MB"
         )
-    key = storage_r2.generar_key(
-        invitacion_id, body.content_type, prefijo="invitaciones"
-    )
+    key = storage.generar_key(invitacion_id, body.content_type, prefijo="invitaciones")
     return PresignResponse(
-        upload_url=storage_r2.presign_put(key, body.content_type), key=key
+        upload_url=storage.presign_put(key, body.content_type), key=key
     )
 
 
@@ -149,7 +147,7 @@ def confirmar_imagen(
     _: Admin = Depends(get_current_admin),
 ):
     inv = _get_or_404(invitacion_id, db)
-    if not storage_r2.key_pertenece_a_item(
+    if not storage.key_pertenece_a_item(
         body.key, invitacion_id, prefijo="invitaciones"
     ):
         raise HTTPException(
@@ -157,13 +155,13 @@ def confirmar_imagen(
             detail="La key no corresponde a un presign de esta invitación",
         )
     anterior = inv.imagen_url
-    inv.imagen_url = storage_r2.url_publica(body.key)
+    inv.imagen_url = storage.url_publica(body.key)
     db.commit()
     # La lámina vieja ya no la referencia nadie.
     if anterior:
-        key = storage_r2.key_desde_url(anterior)
+        key = storage.key_desde_url(anterior)
         if key:
-            storage_r2.borrar_objeto(key)
+            storage.borrar_objeto(key)
     db.refresh(inv)
     return _con_totales(inv)
 
@@ -178,10 +176,10 @@ def quitar_imagen(
 ):
     """Vuelve a la lámina que viene con la app."""
     inv = _get_or_404(invitacion_id, db)
-    if inv.imagen_url and storage_r2.esta_configurado():
-        key = storage_r2.key_desde_url(inv.imagen_url)
+    if inv.imagen_url and storage.esta_configurado():
+        key = storage.key_desde_url(inv.imagen_url)
         if key:
-            storage_r2.borrar_objeto(key)
+            storage.borrar_objeto(key)
     inv.imagen_url = None
     db.commit()
     db.refresh(inv)

@@ -44,7 +44,7 @@ describe('fotos de items', () => {
     fetchMock.mockReset()
   })
 
-  it('subirFoto hace presign, sube a R2 y confirma', async () => {
+  it('subirFoto hace presign, sube al storage y confirma', async () => {
     const store = useItemsStore()
     store.items = [item({ id: 1 })]
     const file = new File(['x'], 'foto.png', { type: 'image/png' })
@@ -63,7 +63,7 @@ describe('fotos de items', () => {
 
     await store.subirFoto(1, file)
 
-    // El PUT va directo a R2, no al backend.
+    // El PUT va directo al storage, no al backend.
     expect(fetchMock).toHaveBeenCalledWith(
       'https://r2.fake/put/items/1/abc.png',
       expect.objectContaining({ method: 'PUT' }),

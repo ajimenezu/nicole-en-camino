@@ -3,7 +3,7 @@ from datetime import UTC, date, datetime
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, selectinload
 
-from app.core import storage_r2
+from app.core import storage
 from app.core.database import get_db
 from app.core.deps import get_current_admin
 from app.models.admin import Admin
@@ -218,11 +218,11 @@ def eliminar_regalo(
 ):
     regalo = _get_regalo_or_404(regalo_id, db)
     item = regalo.item
-    if storage_r2.esta_configurado():
+    if storage.esta_configurado():
         for foto in regalo.fotos:
-            key = storage_r2.key_desde_url(foto.url)
+            key = storage.key_desde_url(foto.url)
             if key:
-                storage_r2.borrar_objeto(key)
+                storage.borrar_objeto(key)
     db.delete(regalo)
     recalcular_item(db, item)
     db.commit()
@@ -231,11 +231,11 @@ def eliminar_regalo(
 # --- Fotos de Nicole usando el regalo ---
 
 
-def _check_r2():
-    if not storage_r2.esta_configurado():
+def _check_storage():
+    if not storage.esta_configurado():
         raise HTTPException(
             status_code=503,
-            detail="Storage de fotos no configurado (variables R2_* faltantes)",
+            detail="Storage de fotos no configurado (variables STORAGE_* faltantes)",
         )
 
 
@@ -246,20 +246,20 @@ def presign_foto(
     db: Session = Depends(get_db),
     _: Admin = Depends(get_current_admin),
 ):
-    _check_r2()
+    _check_storage()
     _get_regalo_or_404(regalo_id, db)
-    if body.content_type not in storage_r2.CONTENT_TYPES_PERMITIDOS:
+    if body.content_type not in storage.CONTENT_TYPES_PERMITIDOS:
         raise HTTPException(
             status_code=422,
             detail="Tipo de archivo no permitido (solo jpeg, png, webp)",
         )
-    if body.size_bytes > storage_r2.MAX_BYTES:
+    if body.size_bytes > storage.MAX_BYTES:
         raise HTTPException(
             status_code=422, detail="La foto supera el tamaño máximo de 5 MB"
         )
-    key = storage_r2.generar_key(regalo_id, body.content_type, prefijo="regalos")
+    key = storage.generar_key(regalo_id, body.content_type, prefijo="regalos")
     return PresignResponse(
-        upload_url=storage_r2.presign_put(key, body.content_type), key=key
+        upload_url=storage.presign_put(key, body.content_type), key=key
     )
 
 
@@ -274,20 +274,20 @@ def confirmar_foto(
     db: Session = Depends(get_db),
     _: Admin = Depends(get_current_admin),
 ):
-    _check_r2()
+    _check_storage()
     _get_regalo_or_404(regalo_id, db)
-    if not storage_r2.key_pertenece_a_item(body.key, regalo_id, prefijo="regalos"):
+    if not storage.key_pertenece_a_item(body.key, regalo_id, prefijo="regalos"):
         raise HTTPException(
             status_code=422,
             detail="La key no corresponde a un presign emitido para este regalo",
         )
-    if not storage_r2.objeto_existe(body.key):
+    if not storage.objeto_existe(body.key):
         raise HTTPException(
             status_code=422,
             detail="El archivo no existe en el storage (¿falló la subida?)",
         )
     foto = FotoRegalo(
-        regalo_id=regalo_id, url=storage_r2.url_publica(body.key), orden=body.orden
+        regalo_id=regalo_id, url=storage.url_publica(body.key), orden=body.orden
     )
     db.add(foto)
     db.commit()
@@ -309,9 +309,9 @@ def eliminar_foto(
     )
     if not foto:
         raise HTTPException(status_code=404, detail="Foto no encontrada")
-    if storage_r2.esta_configurado():
-        key = storage_r2.key_desde_url(foto.url)
+    if storage.esta_configurado():
+        key = storage.key_desde_url(foto.url)
         if key:
-            storage_r2.borrar_objeto(key)
+            storage.borrar_objeto(key)
     db.delete(foto)
     db.commit()

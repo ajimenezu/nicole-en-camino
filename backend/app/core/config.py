@@ -10,12 +10,18 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRE_MINUTES: int = 1440
     CORS_ORIGINS: str = "http://localhost:3000"
-    DEBUG: bool = True
-    R2_ACCOUNT_ID: str = ""
-    R2_ACCESS_KEY_ID: str = ""
-    R2_SECRET_ACCESS_KEY: str = ""
-    R2_BUCKET: str = ""
-    R2_PUBLIC_URL: str = ""
+    # Falso por defecto: si en producción alguien se olvida de definirlo,
+    # la app arranca cerrada (sin /docs y con el secreto validado) en vez
+    # de abierta. En local se prende desde el .env.
+    DEBUG: bool = False
+    # Storage de fotos, cualquier servicio S3-compatible. En producción es
+    # Supabase Storage; la URL pública es la del bucket, sin barra final.
+    STORAGE_ENDPOINT_URL: str = ""
+    STORAGE_REGION: str = "auto"
+    STORAGE_ACCESS_KEY_ID: str = ""
+    STORAGE_SECRET_ACCESS_KEY: str = ""
+    STORAGE_BUCKET: str = ""
+    STORAGE_PUBLIC_URL: str = ""
 
     @model_validator(mode="after")
     def normalizar_database_url(self) -> "Settings":
@@ -50,6 +56,9 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        # Un .env viejo con variables que ya no existen (las R2_* de antes
+        # de pasar a STORAGE_*) no debe impedir que la app arranque.
+        extra = "ignore"
 
 
 settings = Settings()
