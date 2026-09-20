@@ -68,13 +68,15 @@ def actualizar_config(
     _: Admin = Depends(get_current_admin),
 ):
     config = _get_config(db)
-    for campo, valor in body.model_dump(exclude_unset=True).items():
+    cambios = body.model_dump(exclude_unset=True)
+    # La fecha va aparte del resto: mandarla en null es como se borra, y
+    # no es texto que se pueda limpiar con strip().
+    if "fecha_parto" in cambios:
+        config.fecha_parto = cambios.pop("fecha_parto")
+    for campo, valor in cambios.items():
         if valor is None:
             continue
-        limpio = valor.strip()
-        # Vacío borra el dato; en nombre_app no aplica porque el schema
-        # ya exige al menos un carácter.
-        setattr(config, campo, limpio or None)
+        setattr(config, campo, valor)
     db.commit()
     db.refresh(config)
     return ConfigOut.model_validate(config)

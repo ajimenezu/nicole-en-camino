@@ -2,32 +2,37 @@ import { defineStore } from 'pinia'
 
 const NOMBRE_DEFAULT = 'Nicole en Camino'
 
-/** Campos del evento. Se editan desde Ajustes y se leen desde el
- *  endpoint de la invitación, contra su token — no desde /config, que es
- *  público y sin token. */
+/** Lo que se edita desde Ajustes. `fecha_parto: null` borra la fecha y
+ *  con eso apaga la cuenta regresiva. Los datos del evento (lugar, hora)
+ *  no viven acá: son de cada invitación y se leen contra su token. */
 export interface CambiosConfig {
   nombre_app?: string
-  evento_lugar?: string
-  evento_fecha?: string
-  evento_hora?: string
-  evento_texto?: string
-  evento_aviso?: string
+  fecha_parto?: string | null
+}
+
+interface ConfigApi {
+  nombre_app: string
+  fecha_parto: string | null
 }
 
 export const useConfigStore = defineStore('config', {
   state: () => ({
     nombreApp: NOMBRE_DEFAULT,
+    fechaParto: null as string | null,
     cargado: false,
   }),
   actions: {
+    _aplicar(data: ConfigApi) {
+      this.nombreApp = data.nombre_app
+      this.fechaParto = data.fecha_parto
+    },
     async fetch() {
       if (this.cargado) return
       try {
         const config = useRuntimeConfig()
-        const data = await $fetch<{ nombre_app: string }>('/config', {
-          baseURL: config.public.apiBase,
-        })
-        this.nombreApp = data.nombre_app
+        this._aplicar(
+          await $fetch<ConfigApi>('/config', { baseURL: config.public.apiBase }),
+        )
         this.cargado = true
       } catch {
         // Sin backend disponible se mantiene el default — la UI no se rompe.
@@ -35,11 +40,11 @@ export const useConfigStore = defineStore('config', {
     },
     async guardar(cambios: CambiosConfig) {
       const api = useApi()
-      const data = await api<{ nombre_app: string }>('/config', {
+      const data = await api<ConfigApi>('/config', {
         method: 'PATCH',
         body: cambios,
       })
-      this.nombreApp = data.nombre_app
+      this._aplicar(data)
       return data
     },
     setNombre(nombre: string) {

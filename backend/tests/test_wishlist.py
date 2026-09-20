@@ -35,10 +35,10 @@ def test_wishlist_token_invalido_404(client, config):
 def test_config_default(client, config):
     r = client.get("/config")
     assert r.status_code == 200
-    # Solo el nombre: los datos del evento se sirven contra el token de
-    # la invitación, para que el lugar y la hora no queden consultables
-    # sin tener el link.
-    assert r.json() == {"nombre_app": "Nicole en Camino"}
+    # El nombre y la fecha de la cuenta regresiva. El lugar y la hora del
+    # evento no: esos se sirven contra el token de la invitación, para que
+    # no queden consultables sin tener el link.
+    assert r.json() == {"nombre_app": "Nicole en Camino", "fecha_parto": None}
 
 
 def test_config_update_admin(client, auth_headers, config):
@@ -78,3 +78,54 @@ def test_rate_limit_en_endpoints_publicos(client, config):
     finally:
         limiter.reset()
         limiter.enabled = False
+
+
+class TestFechaDeParto:
+    """La fecha de la cuenta regresiva: la pone el admin y la lee
+    cualquiera, porque la página que la muestra se comparte sin token."""
+
+    def test_arranca_sin_fecha(self, client, config):
+        assert client.get("/config").json()["fecha_parto"] is None
+
+    def test_el_admin_la_define_y_queda_publica(self, client, auth_headers, config):
+        r = client.patch(
+            "/config", json={"fecha_parto": "2027-03-15"}, headers=auth_headers
+        )
+        assert r.status_code == 200
+        assert r.json()["fecha_parto"] == "2027-03-15"
+        assert client.get("/config").json()["fecha_parto"] == "2027-03-15"
+
+    def test_null_la_borra(self, client, auth_headers, config):
+        client.patch(
+            "/config", json={"fecha_parto": "2027-03-15"}, headers=auth_headers
+        )
+        r = client.patch("/config", json={"fecha_parto": None}, headers=auth_headers)
+        assert r.status_code == 200
+        assert r.json()["fecha_parto"] is None
+
+    def test_no_mandarla_no_la_pisa(self, client, auth_headers, config):
+        """Guardar solo el nombre no puede borrar la fecha de paso."""
+        client.patch(
+            "/config", json={"fecha_parto": "2027-03-15"}, headers=auth_headers
+        )
+        client.patch("/config", json={"nombre_app": "Otro"}, headers=auth_headers)
+        assert client.get("/config").json()["fecha_parto"] == "2027-03-15"
+
+    def test_fecha_invalida_422(self, client, auth_headers, config):
+        r = client.patch(
+            "/config", json={"fecha_parto": "no-es-fecha"}, headers=auth_headers
+        )
+        assert r.status_code == 422
+
+    def test_requiere_auth(self, client, config):
+        r = client.patch("/config", json={"fecha_parto": "2027-03-15"})
+        assert r.status_code == 403
+        assert client.get("/config").json()["fecha_parto"] is None
+
+
+def test_nombre_solo_espacios_es_422_y_no_500(client, auth_headers, config):
+    """min_length dejaba pasar "   ", que al limpiarlo quedaba vacío e
+    intentaba guardar nulo en una columna que no lo admite."""
+    r = client.patch("/config", json={"nombre_app": "   "}, headers=auth_headers)
+    assert r.status_code == 422
+    assert client.get("/config").json()["nombre_app"] == "Nicole en Camino"

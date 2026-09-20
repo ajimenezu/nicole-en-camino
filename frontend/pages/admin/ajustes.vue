@@ -9,9 +9,20 @@ const nombre = ref('')
 const guardando = ref(false)
 const copiado = ref(false)
 
+// Fecha probable de parto, para la cuenta regresiva. Vacío = sin fecha,
+// que es como se apaga la página pública.
+const fechaParto = ref('')
+const guardandoFecha = ref(false)
+const copiadoCuenta = ref(false)
 
 const shareUrl = computed(() =>
   shareToken.value ? `${location.origin}/w/${shareToken.value}` : '',
+)
+const cuentaUrl = computed(() =>
+  import.meta.client ? `${location.origin}/cuenta-regresiva` : '',
+)
+const diasQueFaltan = computed(() =>
+  fechaParto.value ? diasHasta(fechaParto.value) : null,
 )
 
 onMounted(async () => {
@@ -23,6 +34,7 @@ onMounted(async () => {
     api<{ share_token: string }>('/wishlist/link'),
   ])
   nombre.value = config.nombreApp
+  fechaParto.value = config.fechaParto ?? ''
   shareToken.value = data.share_token
 })
 
@@ -30,6 +42,29 @@ async function copiarLink() {
   await navigator.clipboard.writeText(shareUrl.value)
   copiado.value = true
   setTimeout(() => (copiado.value = false), 2000)
+}
+
+async function copiarCuenta() {
+  await navigator.clipboard.writeText(cuentaUrl.value)
+  copiadoCuenta.value = true
+  setTimeout(() => (copiadoCuenta.value = false), 2000)
+}
+
+async function guardarFecha() {
+  guardandoFecha.value = true
+  try {
+    // Vacío se manda como null: así se borra la fecha y la página
+    // pública vuelve a decir que todavía no hay.
+    await config.guardar({ fecha_parto: fechaParto.value || null })
+    toast.add({
+      title: fechaParto.value ? 'Fecha guardada' : 'Fecha borrada',
+      color: 'green',
+    })
+  } catch {
+    toast.add({ title: 'No se pudo guardar la fecha', color: 'red' })
+  } finally {
+    guardandoFecha.value = false
+  }
 }
 
 
@@ -86,6 +121,50 @@ async function guardarNombre() {
         <p class="text-xs text-gray-500 dark:text-gray-400">
           Cualquiera con el link puede ver y reservar — compártelo solo con
           el círculo cercano.
+        </p>
+      </div>
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <h3 class="font-medium">Cuenta regresiva</h3>
+      </template>
+      <div class="space-y-3">
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          La fecha probable de parto. Con una fecha cargada, la página de
+          la cuenta regresiva muestra cuánto falta; sin fecha, avisa que
+          todavía no hay.
+        </p>
+        <form class="flex flex-wrap items-end gap-2" @submit.prevent="guardarFecha">
+          <UFormGroup label="Fecha probable" class="flex-1">
+            <UInput v-model="fechaParto" type="date" aria-label="Fecha probable de parto" />
+          </UFormGroup>
+          <UButton type="submit" :loading="guardandoFecha">Guardar</UButton>
+        </form>
+        <p
+          v-if="diasQueFaltan !== null && diasQueFaltan >= 0"
+          class="text-sm text-pink-800 dark:text-pink-200"
+        >
+          Faltan {{ diasQueFaltan }} {{ diasQueFaltan === 1 ? 'día' : 'días' }}.
+        </p>
+        <div class="flex gap-2">
+          <UInput
+            :model-value="cuentaUrl"
+            readonly
+            class="flex-1"
+            aria-label="Link de la cuenta regresiva"
+          />
+          <UButton
+            :icon="copiadoCuenta ? 'i-heroicons-check' : 'i-heroicons-clipboard'"
+            :color="copiadoCuenta ? 'green' : 'pink'"
+            @click="copiarCuenta"
+          >
+            {{ copiadoCuenta ? 'Copiado' : 'Copiar' }}
+          </UButton>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          Este link es público y no lleva token: cualquiera que lo reciba ve
+          la cuenta regresiva.
         </p>
       </div>
     </UCard>

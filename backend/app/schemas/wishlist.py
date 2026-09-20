@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+from datetime import date
+
+from pydantic import BaseModel, Field, field_validator
 
 from app.models.item import Prioridad, RangoPrecio
 from app.schemas.item import FotoItemOut
@@ -7,25 +9,37 @@ from app.schemas.item import FotoItemOut
 class ConfigOut(BaseModel):
     """Lo que necesita el armazón de la app. Público y sin token.
 
-    Los datos del evento no van acá: se sirven solo contra el token de la
-    invitación, así el lugar y la hora no quedan consultables por
-    cualquiera que dé con la API.
+    El lugar y la hora del evento no van acá: se sirven solo contra el
+    token de la invitación, así no quedan consultables por cualquiera que
+    dé con la API. La fecha de parto sí, porque la cuenta regresiva es
+    justamente una página para compartir.
     """
 
     nombre_app: str
+    fecha_parto: date | None = None
 
     class Config:
         from_attributes = True
 
 
 class ConfigUpdate(BaseModel):
-    """Los campos del evento son opcionales: mandar solo los que cambian.
-
-    Un string vacío borra el dato, que es como se saca un renglón de la
-    invitación sin tener que mandar null a mano desde el formulario.
-    """
+    """Solo lo que cambia. `fecha_parto: null` borra la fecha y apaga la
+    cuenta regresiva."""
 
     nombre_app: str | None = Field(default=None, min_length=1, max_length=100)
+    fecha_parto: date | None = None
+
+    @field_validator("nombre_app")
+    @classmethod
+    def nombre_no_vacio(cls, v: str | None) -> str | None:
+        """min_length no alcanza: "   " lo pasa y después queda vacío al
+        limpiarlo, y nombre_app no admite nulo en la base."""
+        if v is None:
+            return None
+        limpio = v.strip()
+        if not limpio:
+            raise ValueError("La app necesita un nombre")
+        return limpio
 
 
 class WishlistLinkOut(BaseModel):
