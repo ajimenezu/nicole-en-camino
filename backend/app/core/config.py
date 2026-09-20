@@ -1,7 +1,22 @@
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+
 from pydantic import model_validator
 from pydantic_settings import BaseSettings
 
 _INSECURE_SECRETS = {"changeme", "secret", "your-secret-key", "supersecret", ""}
+
+# Parámetros que algunos proveedores agregan a la URL de conexión y que
+# libpq no conoce: psycopg2 corta con `invalid connection option`. El de
+# Supabase (`supa=base-pooler.x`) marca que la URL es la del pooler.
+_PARAMS_NO_LIBPQ = {"supa"}
+
+
+def _limpiar_url(url: str) -> str:
+    partes = urlparse(url)
+    if not partes.query:
+        return url
+    query = [(k, v) for k, v in parse_qsl(partes.query) if k not in _PARAMS_NO_LIBPQ]
+    return urlunparse(partes._replace(query=urlencode(query)))
 
 
 class Settings(BaseSettings):
@@ -38,6 +53,7 @@ class Settings(BaseSettings):
             self.DATABASE_URL = self.DATABASE_URL.replace(
                 "postgres://", "postgresql://", 1
             )
+        self.DATABASE_URL = _limpiar_url(self.DATABASE_URL)
         return self
 
     @model_validator(mode="after")
