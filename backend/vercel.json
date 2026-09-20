@@ -1,5 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python build_vercel.py",
-  "ignoreCommand": "[ \"$VERCEL_ENV\" != production ]"
+  "buildCommand": "python build_vercel.py"
 }

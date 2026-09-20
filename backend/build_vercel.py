@@ -6,8 +6,8 @@ preDeployCommand de Railway.
 
 Solo actúa en producción. Los deploys de preview comparten las variables
 del proyecto, así que uno de una rama sin mergear migraría la base real
-con código que nadie aprobó. vercel.json ya saltea esos builds; esta
-guarda es la segunda línea por si alguien cambia esa configuración.
+con código que nadie aprobó: ahí este script no hace nada y el deploy
+sigue, solo que contra una base que no se tocó.
 """
 
 import os
