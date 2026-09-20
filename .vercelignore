@@ -1,0 +1,20 @@
+# Qué NO subir en un deploy desde la CLI. A diferencia de un deploy por
+# git, acá se empaqueta el directorio tal como está en la máquina, así
+# que un .env local viajaría con él y pisaría la configuración real: el
+# build intentó migrar contra localhost por esto mismo.
+.env
+.env.*
+**/.env
+**/.env.*
+.venv
+**/.venv
+node_modules
+**/node_modules
+.nuxt
+.output
+.pytest_cache
+.ruff_cache
+__pycache__
+**/__pycache__
+htmlcov
+coverage

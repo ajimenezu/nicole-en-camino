@@ -1,3 +1,4 @@
+import os
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from pydantic import model_validator
@@ -77,7 +78,10 @@ class Settings(BaseSettings):
         return [o.strip() for o in self.CORS_ORIGINS.split(",")]
 
     class Config:
-        env_file = ".env"
+        # En Vercel la configuración son las variables del proyecto y nada
+        # más: si un .env se colara en el paquete del deploy, sus valores
+        # de desarrollo le ganarían a los de producción.
+        env_file = None if os.environ.get("VERCEL") else ".env"
         # Un .env viejo con variables que ya no existen (las R2_* de antes
         # de pasar a STORAGE_*) no debe impedir que la app arranque.
         extra = "ignore"
