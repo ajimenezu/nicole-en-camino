@@ -5,7 +5,11 @@ _INSECURE_SECRETS = {"changeme", "secret", "your-secret-key", "supersecret", ""}
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str
+    DATABASE_URL: str = ""
+    # La integración de Supabase en Vercel define sus propias variables;
+    # POSTGRES_URL es la del pooler. Se usa como respaldo para no tener que
+    # copiar la misma cadena de conexión a mano en DATABASE_URL.
+    POSTGRES_URL: str = ""
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRE_MINUTES: int = 1440
@@ -25,9 +29,11 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def normalizar_database_url(self) -> "Settings":
-        """Railway y otros proveedores entregan la URL con el esquema
-        `postgres://`, que SQLAlchemy 2.0 ya no reconoce. Normalizarlo acá
-        evita un error críptico en el arranque."""
+        """Varios proveedores entregan la URL con el esquema `postgres://`,
+        que SQLAlchemy 2.0 ya no reconoce. Normalizarlo acá evita un error
+        críptico en el arranque."""
+        if not self.DATABASE_URL:
+            self.DATABASE_URL = self.POSTGRES_URL
         if self.DATABASE_URL.startswith("postgres://"):
             self.DATABASE_URL = self.DATABASE_URL.replace(
                 "postgres://", "postgresql://", 1
