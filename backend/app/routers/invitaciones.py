@@ -198,6 +198,10 @@ def ver_invitacion(request: Request, token: str, db: Session = Depends(get_db)):
     config = db.query(WishlistConfig).first()
     return InvitacionPublicaOut(
         nombre_app=config.nombre_app if config else "Nicole en Camino",
+        # El token de la wishlist sale solo si este evento lleva a ella.
+        wishlist_token=(
+            config.share_token if config and inv.muestra_wishlist else None
+        ),
         lugar=inv.lugar,
         fecha=inv.fecha,
         hora=inv.hora,

@@ -22,6 +22,7 @@ class InvitacionBase(BaseModel):
 
 class InvitacionCreate(InvitacionBase):
     pide_cantidad: bool = False
+    muestra_wishlist: bool = True
 
 
 class InvitacionUpdate(BaseModel):
@@ -34,6 +35,7 @@ class InvitacionUpdate(BaseModel):
     texto: str | None = Field(default=None, max_length=500)
     aviso: str | None = Field(default=None, max_length=500)
     pide_cantidad: bool | None = None
+    muestra_wishlist: bool | None = None
 
 
 class InvitacionAdminOut(BaseModel):
@@ -49,6 +51,7 @@ class InvitacionAdminOut(BaseModel):
     aviso: str | None = None
     imagen_url: str | None = None
     pide_cantidad: bool = False
+    muestra_wishlist: bool = True
     asisten: int = 0
     no_asisten: int = 0
     created_at: datetime
@@ -58,7 +61,12 @@ class InvitacionAdminOut(BaseModel):
 
 
 class InvitacionPublicaOut(BaseModel):
-    """Lo que ve quien recibe el link. Sin el título, que es interno."""
+    """Lo que ve quien recibe el link. Sin el título, que es interno.
+
+    `wishlist_token` viene solo si el evento lleva a la lista de regalos:
+    es el link de la wishlist, y mandarlo igual cuando está apagado sería
+    repartirlo de todas formas.
+    """
 
     nombre_app: str
     lugar: str | None = None
@@ -68,3 +76,4 @@ class InvitacionPublicaOut(BaseModel):
     aviso: str | None = None
     imagen_url: str | None = None
     pide_cantidad: bool = False
+    wishlist_token: str | None = None

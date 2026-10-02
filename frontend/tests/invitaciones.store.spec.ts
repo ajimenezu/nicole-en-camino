@@ -24,6 +24,7 @@ function invitacion(over: Partial<Invitacion> = {}): Invitacion {
     aviso: null,
     imagen_url: null,
     pide_cantidad: false,
+    muestra_wishlist: true,
     asisten: 0,
     no_asisten: 0,
     created_at: '2026-09-01T12:00:00Z',

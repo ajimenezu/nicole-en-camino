@@ -38,6 +38,12 @@ class Invitacion(Base):
     # a familias; en una tanda de amigas es un campo de más.
     pide_cantidad: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    # Si la invitación lleva al que la recibe hasta la lista de regalos.
+    # Es por evento: a un baby shower se le pide lista, a una juntada de
+    # amigas quizá no, y el link de la wishlist se reparte con quienes la
+    # piden. Nace prendido, que es el caso común.
+    muestra_wishlist: Mapped[bool] = mapped_column(Boolean, default=True)
+
     # Lámina propia. Si está vacía se usa la que viene con la app: sirve
     # para el caso más común, varias tandas del mismo baby shower.
     imagen_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

@@ -13,6 +13,9 @@ interface DatosEvento {
   aviso: string | null
   imagen_url: string | null
   pide_cantidad: boolean
+  // Viene solo si este evento lleva a la lista de regalos. Si está
+  // apagado, el token ni siquiera sale de la API.
+  wishlist_token: string | null
 }
 
 // Los datos llegan desde la página, que ya los pidió con el token: así
@@ -41,6 +44,10 @@ const editando = ref(false)
 // app, que sirve para varias tandas del mismo baby shower.
 const LAMINA_POR_DEFECTO = '/invitacion-julia.webp'
 const lamina = computed(() => props.evento.imagen_url || LAMINA_POR_DEFECTO)
+
+const wishlistUrl = computed(() =>
+  props.evento.wishlist_token ? `/w/${props.evento.wishlist_token}` : null,
+)
 
 const nombre = ref('')
 const asistira = ref<'SI' | 'NO'>('SI')
@@ -241,6 +248,22 @@ function volverAResponder() {
           </UButton>
         </form>
       </UCard>
+
+      <!-- Lleva a la lista de regalos. Va después de confirmar porque es
+           lo secundario, y solo aparece si este evento la muestra. -->
+      <div v-if="wishlistUrl" class="mt-6 text-center">
+        <p class="mb-2 text-sm text-neutral-600 dark:text-neutral-400">
+          ¿Querés regalar algo? Armamos una lista para que no se repitan.
+        </p>
+        <UButton
+          :to="wishlistUrl"
+          size="lg"
+          icon="i-heroicons-gift"
+          color="pink"
+        >
+          Ver la lista de regalos
+        </UButton>
+      </div>
     </div>
   </section>
 </template>

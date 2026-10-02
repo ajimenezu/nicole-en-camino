@@ -86,7 +86,7 @@ function cuando(iso: string) {
   <div class="space-y-4">
     <div class="flex flex-wrap items-center justify-between gap-2">
       <h2 class="text-xl font-medium text-pink-800 dark:text-pink-200">
-        Invitaciones
+        Eventos
       </h2>
       <UButton
         variant="ghost"
@@ -123,7 +123,7 @@ function cuando(iso: string) {
 
     <UCard v-else-if="invitaciones.invitaciones.length === 0">
       <p class="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-        Todavía no hay invitaciones. Creá la primera con el campo de arriba.
+        Todavía no hay eventos. Creá el primero con el campo de arriba.
       </p>
     </UCard>
 
@@ -227,7 +227,7 @@ function cuando(iso: string) {
 
     <ConfirmModal
       v-if="aBorrarInv"
-      titulo="Eliminar invitación"
+      titulo="Eliminar evento"
       :descripcion="`Se borra «${aBorrarInv.titulo}» y sus ${respuestasDe(aBorrarInv.id).length} respuestas. El link deja de funcionar.`"
       confirm-label="Eliminar"
       @close="aBorrarInv = null"

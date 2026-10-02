@@ -106,7 +106,7 @@ async function guardarNombre() {
         <p class="text-sm text-gray-600 dark:text-gray-300">
           Para quien pregunte qué hace falta. Verán solo los items por
           comprar y podrán reservar qué regalar — sin crear cuenta. Las
-          invitaciones al baby shower tienen su propio link, en Invitaciones.
+          invitaciones a cada evento tienen su propio link, en Eventos.
         </p>
         <div class="flex gap-2">
           <UInput :model-value="shareUrl" readonly class="flex-1" aria-label="Link de la wishlist" />

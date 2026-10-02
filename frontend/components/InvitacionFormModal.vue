@@ -16,6 +16,7 @@ const f = reactive({
   texto: props.invitacion.texto ?? '',
   aviso: props.invitacion.aviso ?? '',
   pideCantidad: props.invitacion.pide_cantidad,
+  muestraWishlist: props.invitacion.muestra_wishlist,
 })
 const guardando = ref(false)
 const subiendo = ref(false)
@@ -35,6 +36,7 @@ async function guardar() {
       texto: f.texto.trim(),
       aviso: f.aviso.trim(),
       pide_cantidad: f.pideCantidad,
+      muestra_wishlist: f.muestraWishlist,
     })
     toast.add({ title: 'Invitación actualizada', color: 'green' })
     emit('close')
@@ -126,6 +128,12 @@ async function quitarImagen() {
           v-model="f.pideCantidad"
           label="Preguntar cuántos vienen"
           help="Para cuando se invita a familias. Es un campo de texto: «2 adultos y 1 bebé»."
+        />
+
+        <UCheckbox
+          v-model="f.muestraWishlist"
+          label="Mostrar la lista de regalos"
+          help="Agrega un botón que lleva a la wishlist. Apagado, quien recibe este link no la ve."
         />
 
         <UFormGroup

@@ -291,8 +291,8 @@ function salir() {
           variant="ghost"
           color="gray"
           icon="i-heroicons-envelope-open"
-          to="/admin/invitados"
-          aria-label="Ver quién viene al baby shower"
+          to="/admin/eventos"
+          aria-label="Ver los eventos y quién viene"
         />
         <UButton
           variant="ghost"

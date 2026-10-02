@@ -366,3 +366,59 @@ class TestCuantosVienen:
             json={"cantidad": "3, se suma mi hermana"},
         )
         assert r.json()["cantidad"] == "3, se suma mi hermana"
+
+
+class TestLaInvitacionLlevaALaWishlist:
+    """Cada evento decide si su invitación lleva a la lista de regalos: a
+    un baby shower sí, a una juntada de amigas puede que no."""
+
+    def test_nace_prendido_y_devuelve_el_token_de_la_wishlist(self, client, db):
+        config = _config(db)
+        inv = _invitacion(db)
+        datos = client.get(f"/i/{inv.token}").json()
+        assert datos["wishlist_token"] == config.share_token
+
+    def test_apagado_no_manda_el_token(self, client, auth_headers, db):
+        """No basta con esconder el botón: si el token viaja igual, el
+        link de la wishlist queda repartido entre todos los invitados."""
+        _config(db)
+        inv = _invitacion(db)
+        client.patch(
+            f"/invitaciones/{inv.id}",
+            json={"muestra_wishlist": False},
+            headers=auth_headers,
+        )
+        assert client.get(f"/i/{inv.token}").json()["wishlist_token"] is None
+
+    def test_se_puede_volver_a_prender(self, client, auth_headers, db):
+        config = _config(db)
+        inv = _invitacion(db)
+        for valor in (False, True):
+            client.patch(
+                f"/invitaciones/{inv.id}",
+                json={"muestra_wishlist": valor},
+                headers=auth_headers,
+            )
+        assert client.get(f"/i/{inv.token}").json()["wishlist_token"] == (
+            config.share_token
+        )
+
+    def test_el_admin_ve_el_estado_del_interruptor(self, client, auth_headers):
+        creada = client.post(
+            "/invitaciones", json={"titulo": "Juntada"}, headers=auth_headers
+        ).json()
+        assert creada["muestra_wishlist"] is True
+        apagada = client.patch(
+            f"/invitaciones/{creada['id']}",
+            json={"muestra_wishlist": False},
+            headers=auth_headers,
+        ).json()
+        assert apagada["muestra_wishlist"] is False
+
+    def test_se_puede_crear_apagado(self, client, auth_headers):
+        creada = client.post(
+            "/invitaciones",
+            json={"titulo": "Juntada", "muestra_wishlist": False},
+            headers=auth_headers,
+        ).json()
+        assert creada["muestra_wishlist"] is False
