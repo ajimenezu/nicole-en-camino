@@ -149,7 +149,7 @@ async function quitarImagen() {
             >
             <img
               v-else
-              src="/invitacion-julia.webp"
+              src="/invitacion-nicole.webp"
               alt=""
               class="h-24 w-16 shrink-0 rounded border border-dashed border-neutral-300 object-cover opacity-60 dark:border-neutral-700"
             >

@@ -42,7 +42,7 @@ const editando = ref(false)
 
 // Lámina propia si la invitación tiene una; si no, la que viene con la
 // app, que sirve para varias tandas del mismo baby shower.
-const LAMINA_POR_DEFECTO = '/invitacion-julia.webp'
+const LAMINA_POR_DEFECTO = '/invitacion-nicole.webp'
 const lamina = computed(() => props.evento.imagen_url || LAMINA_POR_DEFECTO)
 
 const wishlistUrl = computed(() =>
